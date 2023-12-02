@@ -47,11 +47,14 @@ class Rider(User):
     def update_location(self, current_location):
         self.current_location = current_location
 
-    def ride_req(self, destination):
+    def ride_req(self, ride_sharing, destination):
         if not self.current_ride:
             ride_req = Ride_Request(self, destination)
-            ride_mathcer = Ride_Matching()
+            ride_mathcer = Ride_Matching(ride_sharing.drivers)
             self.current_ride = ride_mathcer.find_driver(ride_req)
+    
+    def show_current_ride(self):
+        print(self.current_ride)
 
 class Driver(User):
     def __init__(self, name, email, nid, curren_location) -> None:
@@ -84,17 +87,20 @@ class Ride:
         self.rider.wallet -= self.estimated_fare
         self.driver.wallet += self.estimated_fare
 
+    def __repr__(self) -> str:
+        return f'Ride Details. Start from {self.start_location} to {self.end_location}'
+
 class Ride_Request:
     def __init__(self, rider, end_location) -> None:
         self.rider = rider
         self.end_location = end_location
 
 class Ride_Matching:
-    def __init__(self) -> None:
-        self.available_drivers = []
+    def __init__(self, drivers) -> None:
+        self.available_drivers = drivers
     
     def find_driver(self, ride_request):
-        if len(self.drivers) > 0:
+        if len(self.available_drivers) > 0:
             driver = self.available_drivers[0]
             ride = Ride(ride_request.rider.current_location, ride_request.end_location)
             driver.accept_ride(ride)
@@ -139,3 +145,5 @@ niye_jaw.add_rider(sakib)
 raja = Driver('Raja chandra', 'raja@kala.com', 1223344, 'Gulshan')
 niye_jaw.add_driver(raja)
 print(niye_jaw)
+sakib.ride_req(niye_jaw, 'Farme Gate')
+sakib.show_current_ride()
