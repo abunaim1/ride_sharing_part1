@@ -49,9 +49,9 @@ class Rider(User):
 
     def ride_req(self, ride_sharing, destination):
         if not self.current_ride:
-            ride_req = Ride_Request(self, destination)
+            ride_request = Ride_Request(self, destination)
             ride_mathcer = Ride_Matching(ride_sharing.drivers)
-            self.current_ride = ride_mathcer.find_driver(ride_req)
+            self.current_ride = ride_mathcer.find_driver(ride_request)
     
     def show_current_ride(self):
         print(self.current_ride)
